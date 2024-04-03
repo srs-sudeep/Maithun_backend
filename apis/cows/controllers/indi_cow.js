@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const models = {
-  medicines: require("../models/medicines"),
+  medicines: require("../models/cow"),
   Vendor: require("../../vendor/models/vendor"), // Import Vendor model
 };
 

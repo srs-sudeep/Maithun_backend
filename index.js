@@ -10,13 +10,13 @@ const serverless = require('serverless-http');
 const app = express();
 if (process.env.NODE_ENV === 'production') {
   app.use(cors({
-    origin: ['http://localhost:3000'],
+    origin: ['exp://10.10.17.192:8081'],
     credentials: true,
     exposedHeaders: ["Set-Cookie"],
   }));
 } else {
   app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000','https://main.d3vikbqsbexhe5.amplifyapp.com','http://localhost:3001','https://www.admin.chcommune.com/','https://admin.chcommune.com/','http://www.admin.chcommune.com/','http://admin.chcommune.com/',],
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000','exp://10.10.17.192:8081','http://localhost:3001','https://www.admin.chcommune.com/','https://admin.chcommune.com/','http://www.admin.chcommune.com/','http://admin.chcommune.com/',],
     credentials: true,
     exposedHeaders: ["Set-Cookie"],
   }));

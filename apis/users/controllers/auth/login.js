@@ -3,12 +3,13 @@
 // const userInfo = require("../../models/userInfo");
 // require("dotenv").config();
 // const DB = process.env.DB;
-const user = require("../../models/user");
+const User = require("../../models/user");
 
 async function login(req, res) {
-  const { email, password } = req.body;
+  const { name, password } = req.body;
+  console.log(name, password);
   try {
-    const user = await user.findOne({ email, password });
+    const user = await User.findOne({ name, password });
     if (user) {
       req.session.user = user;
       res.json({ success: true, user });

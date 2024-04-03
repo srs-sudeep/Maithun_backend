@@ -4,10 +4,6 @@ function dbConnection() {
     mongoose
         .connect(
             "mongodb+srv://mithun:1234@cluster0.7hlvy0n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-            {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            }
         )
         .then(() => console.log("Connected to MongoDB Atlas"))
         .catch((err) => console.log("Error connecting to MongoDB Atlas:", err));
