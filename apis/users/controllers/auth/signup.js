@@ -1,36 +1,48 @@
 // signup.js
 
-const User = require('../../models/user');
+const { Buyer, Seller } = require("../../models/user");
 
 async function signup(req, res) {
-  const { name, email, password, type, phone, address } = req.body;
-  console.log(name,email,password,type,phone,address);
-  
-  try {
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
-    }
+  const { name, email, password, isSeller, phone, userLocality } = req.body;
 
-    // Create a new user
-    const newUser = new User({
+  console.log(name, email, password, isSeller, phone, userLocality);
+
+  try {
+    let existingUser;
+    if (isSeller) {
+      existingUser = await Seller.findOne({ email });
+    } else {
+      existingUser = await Buyer.findOne({ email });
+    }
+  
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "User already exists" });
+    }
+  
+    const newUser = isSeller ? new Seller({
       name,
       email,
       password,
-      type,
+      isSeller,
       phone,
-      address,
+      userLocality,
+    }) : new Buyer({
+      name,
+      email,
+      password,
+      isSeller,
+      phone,
+      userLocality,
     });
-
-    // Save the new user to the database
+  
     await newUser.save();
-
-    res.json({ success: true, message: 'User registered successfully' });
+  
+    res.json({ success: true, message: isSeller ? "Seller registered successfully" : "Buyer registered successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
+  
 }
 
 module.exports = signup;

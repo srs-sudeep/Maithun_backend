@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const getCows = require("./controllers/cow");
-// const getOrder = require("./controllers/orders/getOrder");
-// const confirmOrder = require("./controllers/orders/orderconfirmation");
-// const indi_medicines = require("./controllers/indi_cow");
-// const authenticateMiddleware = require("./middleware/auth");
+const cowController = require("./controllers/cow");
 
-// router.use(["/order*", "/getOrder*"], authenticateMiddleware);
+const {buyerTokenVerify, sellerTokenVerify} = require("../users/middleware/auth");
+const { getCows, createCow, updateCow, deleteCow, getCowsBySellerId } = require("./controllers/cow");
 
-router.get("/", );
-// router.get("/indi/:id", indi_medicines);
-// router.get("/getOrder", getOrder);
-// router.post("/order", confirmOrder);
+router.get("/", getCows);
+router.get("/:vendorId", sellerTokenVerify, getCowsBySellerId);
+router.post("/", sellerTokenVerify, createCow);
+router.put("/:id", sellerTokenVerify, updateCow);
+router.delete("/:id", sellerTokenVerify, deleteCow);
 
 module.exports = router;

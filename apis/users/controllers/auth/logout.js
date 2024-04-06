@@ -5,7 +5,7 @@ async function logout(req, res) {
     secure: true,
     expires: new Date(0),
   });
-  res.status(200).json({ message: "logout successfull" });
+  res.status(200).json({ message: "Logout successful!" });
 }
 
 module.exports = logout;

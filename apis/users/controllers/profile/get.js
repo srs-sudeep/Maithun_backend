@@ -1,9 +1,7 @@
-const userInfo = require("../../models/userInfo");
+const userInfo = require("../../models/user");
 
-// Corrected export statement, directly exporting the async function
 async function profile(req, res) {
   try {
-    // Assuming uId is a valid user ID, find the user using userInfo.findById
     const { uId } = req.body;
     const user = await userInfo.findById(uId);
     res.status(200).json({ user });

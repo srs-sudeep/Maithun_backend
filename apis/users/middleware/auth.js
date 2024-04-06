@@ -1,58 +1,62 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const userInfo = require("../models/user");
+const { Buyer, Seller } = require("../models/user");
 
-// Middleware for validating JWT token in the request
-async function tokenValidationMiddleware(req, res, next) {
-  // Function to extract the value of the 'token' from the cookie header
-  function extractTokenValue(tokenString) {
-    if (tokenString && typeof tokenString === "string") {
-      const tokenIndex = tokenString.indexOf("token=");
-
-      if (tokenIndex !== -1) {
-        const tokenStartIndex = tokenIndex + 6;
-        const tokenEndIndex = tokenString.indexOf(";", tokenStartIndex);
-        const tokenValue =
-          tokenEndIndex !== -1
-            ? tokenString.substring(tokenStartIndex, tokenEndIndex)
-            : tokenString.substring(tokenStartIndex);
-
-        return tokenValue;
-      } else {
-        return null; // 'token=' not found in the string
-      }
-    } else {
-      return null; // Handle the case where tokenString is undefined or not a string
-    }
-  }
-
-  // Extract the token from the request's cookies
-  const token = extractTokenValue(req.headers.cookie);
-
-  // If the token is not found, return a 401 (Unauthorized) response
+function buyerTokenVerify(req, res, next) {
+  const token = req.headers.authorization; 
   if (!token) {
-    return res.status(200).json({ message: "User not logged in" });
+    return res.status(401).json({ message: "Unauthorized: Missing token" });
   }
 
-  // Verify the JWT token
-  jwt.verify(token, process.env.secret, (err, user) => {
+  jwt.verify(token.split(' ')[1], process.env.JWT_BUYER_SECRET_KEY, async (err, user) => {
     if (err) {
-      // If the token is invalid or expired, return a 401 (Unauthorized) response
       return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
 
-    const existuser = userInfo.findOne({ _id: user.userId, type: "user" });
-
-    if (existuser) {
-      console.log("Token verified");
-    } else {
-      console.log("Token not verified");
+    try {
+      const existUser = await Buyer.findOne({ _id: user.userId });
+      if (existUser) {
+        console.log("Token verified");
+        req.body.uId = user.userId;
+        next();
+      } else {
+        console.log("Token not verified");
+        return res.status(401).json({ message: "Unauthorized: User not found" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
     }
-    req.body.uId = user.userId;
-
-    next();
   });
 }
 
-// Export the middleware function for use in other modules
-module.exports = tokenValidationMiddleware;
+function sellerTokenVerify(req, res, next) {
+  const token = req.headers.authorization; 
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: Missing token" });
+  }
+
+  jwt.verify(token.split(' ')[1], process.env.JWT_SELLER_SECRET_KEY, async (err, user) => {
+    if (err) {
+      return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
+
+    try {
+      const existUser = await Seller.findOne({ _id: user.userId });
+      if (existUser) {
+        console.log("Token verified");
+        // Pass the seller's email to the request object
+        req.user = { email: existUser.email };
+        next();
+      } else {
+        console.log("Token not verified");
+        return res.status(401).json({ message: "Unauthorized: User not found" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+}
+
+
+module.exports = { buyerTokenVerify, sellerTokenVerify };

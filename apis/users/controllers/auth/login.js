@@ -1,23 +1,33 @@
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
-// const userInfo = require("../../models/userInfo");
-// require("dotenv").config();
-// const DB = process.env.DB;
-const User = require("../../models/user");
+const { Buyer, Seller } = require("../../models/user");
+const jwt = require("jsonwebtoken");
 
 async function login(req, res) {
-  const { name, password } = req.body;
-  console.log(name, password);
+  const { email, password } = req.body;
+  console.log(email, password);
   try {
-    const user = await User.findOne({ name, password });
+    let user;
+    user = await Buyer.findOne({ email, password });
     if (user) {
-      req.session.user = user;
-      res.json({ success: true, user });
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_BUYER_SECRET_KEY, {
+        expiresIn: "1h",
+      });
+      res.header("Authorization", `Bearer ${token}`);
+      res.json({ success: true, user, token });
     } else {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
+      user = await Seller.findOne({ email, password });
+      if (user) {
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SELLER_SECRET_KEY, {
+          expiresIn: "1h",
+        });
+        res.header("Authorization", `Bearer ${token}`);
+        res.json({ success: true, user, token });
+      }
+      else{
+        res.status(401).json({ success: false, message: "Invalid credentials" });
+      }
     }
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
 

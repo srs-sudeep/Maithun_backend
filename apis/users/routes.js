@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const login = require("./controllers/auth/login");
 const signup = require("./controllers/auth/signup");
-// const logout = require("./controllers/auth/logout");
+const logout = require("./controllers/auth/logout");
 // const profileGet = require("./controllers/profile/get");
-// const verify = require("./controllers/auth/verify");
 // const auth = require("./middleware/auth");
 // const cartGet = require("./controllers/cart/get");
 // const cartPost = require("./controllers/cart/post");
@@ -15,10 +14,9 @@ const signup = require("./controllers/auth/signup");
 // router.use(["/profile*", "/logout*", "/verify*", "/cart*"], auth);
 
 // Routers for auth apis
-// router.get("/verify", verify);
 router.post("/login", login);
 router.post("/signup", signup);
-// router.get("/logout", logout);
+router.get("/logout", logout);
 
 //Routers for profle page apis
 // router.get("/profile", profileGet);
