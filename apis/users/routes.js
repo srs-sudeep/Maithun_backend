@@ -3,7 +3,7 @@ const router = express.Router();
 const login = require("./controllers/auth/login");
 const signup = require("./controllers/auth/signup");
 const logout = require("./controllers/auth/logout");
-// const profileGet = require("./controllers/profile/get");
+const profileGet = require("./controllers/profile/get");
 // const auth = require("./middleware/auth");
 // const cartGet = require("./controllers/cart/get");
 // const cartPost = require("./controllers/cart/post");
@@ -19,7 +19,7 @@ router.post("/signup", signup);
 router.get("/logout", logout);
 
 //Routers for profle page apis
-// router.get("/profile", profileGet);
+router.get("/profile", profileGet);
 // router.post("/profile/edit", updateProfile);
 
 //Router for cart page apis

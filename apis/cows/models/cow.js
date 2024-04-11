@@ -3,42 +3,49 @@ const mongoose = require("mongoose");
 const cowSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   vendorId: {
     type: String,
-    required: true
+    required: true,
   },
-  gender: {
+  vendorName: {
+    type: String,
+    required: true,
+  },
+  vendorPhone: {
     type: Number,
     required: true,
-    enum: [0, 1] // 0 for male and 1 for female
+  },
+  gender: {
+    type: String,
+    required: true,
+    enum: ["male", "female"], // 0 for male and 1 for female
   },
   age: {
     type: Number,
-    required: true
+    required: true,
   },
   hornSize: {
     type: Number,
-    required: true
+    required: true,
   },
   imageUrls: {
     type: [String],
-    required: true
+    required: true,
   },
   price: {
     type: Number,
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   dateAdded: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
-module.exports = mongoose.model('Cow', cowSchema);
-
+module.exports = mongoose.model("Cow", cowSchema);

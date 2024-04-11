@@ -6,7 +6,7 @@ const {buyerTokenVerify, sellerTokenVerify} = require("../users/middleware/auth"
 const { getCows, createCow, updateCow, deleteCow, getCowsBySellerId } = require("./controllers/cow");
 
 router.get("/", getCows);
-router.get("/:vendorId", sellerTokenVerify, getCowsBySellerId);
+router.get("/vendor/:sellerId", sellerTokenVerify, getCowsBySellerId);
 router.post("/", sellerTokenVerify, createCow);
 router.put("/:id", sellerTokenVerify, updateCow);
 router.delete("/:id", sellerTokenVerify, deleteCow);
